@@ -4,7 +4,8 @@
  */
 package ad.ejneodatiscuentas.pojos;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -13,16 +14,23 @@ import java.util.List;
 public class Cliente {
 
     private String dni, nombre, direccion;
-    private List<Cuenta> cuentas;
+    private Set<Cuenta> cuentas;
 
     public Cliente() {
     }
 
-    public Cliente(String dni, String nombre, String direccion, List<Cuenta> cuentas) {
+    public Cliente(String dni, String nombre, String direccion, Set<Cuenta> cuentas) {
         this.dni = dni;
         this.nombre = nombre;
         this.direccion = direccion;
         this.cuentas = cuentas;
+    }
+
+    public Cliente(String dni, String nombre, String direccion) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.cuentas = new HashSet<Cuenta>();
     }
 
     public String getDni() {
@@ -49,12 +57,33 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public List<Cuenta> getCuentas() {
+    public Set<Cuenta> getCuentas() {
         return cuentas;
     }
 
-    public void setCuentas(List<Cuenta> cuentas) {
+    public void setCuentas(Set<Cuenta> cuentas) {
         this.cuentas = cuentas;
     }
 
+    public boolean addCuenta(Cuenta cuenta) {
+        if (!cuentas.contains(cuenta)) {
+            this.cuentas.add(cuenta);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeCuenta(Cuenta cuenta) {
+        if (cuentas.contains(cuenta)) {
+            this.cuentas.remove(cuenta);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "dni=" + dni + ", nombre=" + nombre + ", direccion=" + direccion + "}";
+    }
+    
 }

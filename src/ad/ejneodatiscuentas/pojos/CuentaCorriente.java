@@ -4,6 +4,7 @@
  */
 package ad.ejneodatiscuentas.pojos;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,10 +14,18 @@ import java.util.Set;
  */
 public class CuentaCorriente extends Cuenta {
 
-    private List movimientos;
+    private List movimientos = new ArrayList<Movimiento>();
 
     public CuentaCorriente() {
 
+    }
+
+    public CuentaCorriente(int numero, String sucursal, float saldoActual) {
+        super(numero, sucursal, saldoActual);
+    }
+
+    public CuentaCorriente(int numero, String sucursal, float saldoActual, Set<Cliente> clientes) {
+        super(numero, sucursal, saldoActual, clientes);
     }
 
     public CuentaCorriente(List movimientos, int numero, String sucursal, float saldoActual, Set<Cliente> clientes) {
@@ -34,6 +43,18 @@ public class CuentaCorriente extends Cuenta {
 
     public boolean addMovimientos(Movimiento movimiento) {
         if (!movimientos.contains(movimiento)) {
+            switch (movimiento.getOperacion()) {
+                case Movimiento.OP_INGRESO:
+                    setSaldoActual(getSaldoActual() + movimiento.getImporte());
+                    movimiento.setSaldoResultante(getSaldoActual());
+                    break;
+                case Movimiento.OP_RETIRADA:                                        
+                    setSaldoActual(getSaldoActual()- movimiento.getImporte());
+                    movimiento.setSaldoResultante(getSaldoActual());
+                    break;
+                default:
+                    return false;
+            }          
             this.movimientos.add(movimiento);
             return true;
         }

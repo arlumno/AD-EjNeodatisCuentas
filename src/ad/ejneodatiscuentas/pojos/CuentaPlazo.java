@@ -19,12 +19,18 @@ public class CuentaPlazo extends Cuenta {
     public CuentaPlazo() {
     }
 
+    public CuentaPlazo(int intereses, String fechaVencimiento, float depositoPlazo, int numero, String sucursal, float saldoActual) {
+        super(numero, sucursal, saldoActual);
+        this.intereses = intereses;
+        this.fechaVencimiento = fechaVencimiento;
+        this.depositoPlazo = depositoPlazo;
+    }
+
     public CuentaPlazo(int intereses, String fechaVencimiento, float depositoPlazo, int numero, String sucursal, float saldoActual, Set<Cliente> clientes) {
         super(numero, sucursal, saldoActual, clientes);
         this.intereses = intereses;
         this.fechaVencimiento = fechaVencimiento;
         this.depositoPlazo = depositoPlazo;
-
     }
 
     public int getIntereses() {

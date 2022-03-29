@@ -4,7 +4,7 @@
  */
 package ad.ejneodatiscuentas.pojos;
 
-import java.sql.Date;
+import java.util.Date;
 //import java.sql.Time;
 
 /**
@@ -19,8 +19,14 @@ public class Movimiento {
     private char operacion;
     private float importe;
     private float saldoResultante;
+    public final static char OP_INGRESO = 'I';
+    public final static char OP_RETIRADA = 'R';
 
     public Movimiento() {
+    }
+
+    public Movimiento(Date fecha, Cuenta cuenta, char operacion, float importe) {
+        this(fecha, cuenta, operacion, importe, 0);        
     }
 
     public Movimiento(Date fecha, Cuenta cuenta, char operacion, float importe, float saldoResultante) {
@@ -70,6 +76,5 @@ public class Movimiento {
     public void setSaldoResultante(float saldoResultante) {
         this.saldoResultante = saldoResultante;
     }
-    
-    
+
 }

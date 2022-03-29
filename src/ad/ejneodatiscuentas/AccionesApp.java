@@ -4,20 +4,18 @@
  */
 package ad.ejneodatiscuentas;
 
-
+import ad.ejneodatiscuentas.pojos.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.neodatis.odb.ODBRuntimeException;
-import org.neodatis.odb.ObjectValues;
-import org.neodatis.odb.Values;
 import org.neodatis.odb.core.query.IQuery;
-import org.neodatis.odb.core.query.criteria.And;
 import org.neodatis.odb.core.query.criteria.ICriterion;
 import org.neodatis.odb.core.query.criteria.Where;
 import org.neodatis.odb.impl.core.query.criteria.CriteriaQuery;
-import org.neodatis.odb.impl.core.query.values.ValuesCriteriaQuery;
 
 /**
  *
@@ -92,6 +90,7 @@ class AccionesApp {
 //        return autor;
 //    }
 //
+
     void runStopServer() {
         StringBuilder anuncio = new StringBuilder();
         if (OdbServer.isRun()) {
@@ -452,15 +451,60 @@ class AccionesApp {
 //    }
 
     void altaCuentaCorriente() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        HashSet<Cliente> clientes = new HashSet<Cliente>();
+        Cliente c1 = new Cliente("53170624Y", "Armando", "cualquier lugar 123");
+        clientes.add(c1);
+        CuentaCorriente cc01 = new CuentaCorriente(10001, "florida", 100, clientes);
+        c1.addCuenta(cc01);
+
+        if (obtenerCuenta(cc01.getNumero()) == null) {
+            try {
+                OdbConnection.getOdb().store(cc01);
+                peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cc01.toString());
+                OdbConnection.getOdb().close();
+            } catch (Exception ex) {
+                peticiones.SalidasGui.mensaje(ex.toString());
+            }
+        } else {
+            peticiones.SalidasGui.mensaje("No se puede crear la cuenta, el nº " + cc01.getNumero() + " ya existe.");
+        }
     }
 
     void altaCuentaPlazo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        HashSet<Cliente> clientes = new HashSet<Cliente>();
+        Cliente c1 = new Cliente("36037769N", "Castro", "otro lugar distinto 123");
+        clientes.add(c1);
+        CuentaPlazo cp01 = new CuentaPlazo(4, "29/03/2023", 20000, 1002, "Sanjurjo Badía", 0, clientes);
+        c1.addCuenta(cp01);
+
+        if (obtenerCuenta(cp01.getNumero()) == null) {
+            try {
+                OdbConnection.getOdb().store(cp01);
+                peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cp01.toString());
+                OdbConnection.getOdb().close();
+            } catch (Exception ex) {
+                peticiones.SalidasGui.mensaje(ex.toString());
+            }
+        } else {
+            peticiones.SalidasGui.mensaje("No se puede crear la cuenta, el nº " + cp01.getNumero() + " ya existe.");
+        }
     }
 
     void altaMovimiento() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            CuentaCorriente cuentacorriente = obtenerCuentaCorriente(10001);
+            Movimiento mov = new Movimiento(dateFormat.parse("29/03/2022"), cuentacorriente, Movimiento.OP_INGRESO, 200, 0);
+            cuentacorriente.addMovimientos(mov);
+            try {
+                OdbConnection.getOdb().store(cuentacorriente);
+                peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cuentacorriente.toString());
+                OdbConnection.getOdb().close();
+            } catch (Exception ex) {
+                peticiones.SalidasGui.mensaje(ex.toString());
+            }
+        } catch (ParseException ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
     }
 
     void modInteresCuentaPlazo() {
@@ -475,7 +519,8 @@ class AccionesApp {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    void listarClientesSaldoMayor(float f) {
+    void listarClientesSaldoMayor(float f
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -489,6 +534,29 @@ class AccionesApp {
 
     void listarMovimientosEntreFechas() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private Cuenta obtenerCuenta(int numero) {
+        Cuenta cuentaBD = null;
+        try {
+            ICriterion filtro = Where.equal("numero", numero);
+            IQuery query = new CriteriaQuery(Cuenta.class, filtro).setPolymorphic(true);
+            cuentaBD = (Cuenta) OdbConnection.getOdb().getObjects(query).getFirst();
+        } catch (ODBRuntimeException ex) {
+            //no hay resultados.        
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
+        return cuentaBD;
+    }
+
+    private CuentaCorriente obtenerCuentaCorriente(int numero) {
+        CuentaCorriente cuentaCorriente = null;
+        Cuenta cuenta = obtenerCuenta(numero);
+        if(cuenta != null && cuenta instanceof CuentaCorriente){
+            cuentaCorriente = (CuentaCorriente) cuenta;
+        }
+        return cuentaCorriente;
     }
 
 }

@@ -5,6 +5,7 @@
 package ad.ejneodatiscuentas.pojos;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -16,10 +17,17 @@ public class Cuenta implements Serializable{
     private int numero;
     private String sucursal;
     private float saldoActual;
-    private Set<Cliente> clientes;
+    private Set<Cliente> clientes  = new HashSet<Cliente>();
 
     public Cuenta() {
     }
+
+    public Cuenta(int numero, String sucursal, float saldoActual) {
+        this.numero = numero;
+        this.sucursal = sucursal;
+        this.saldoActual = saldoActual;
+    }
+    
 
     public Cuenta(int numero, String sucursal, float saldoActual, Set<Cliente> clientes) {
         this.numero = numero;
@@ -59,5 +67,27 @@ public class Cuenta implements Serializable{
     public void setClientes(Set<Cliente> clientes) {
         this.clientes = clientes;
     }
+    
+    public boolean addCliente(Cliente cliente) {
+        if (!clientes.contains(cliente)) {
+            this.clientes.add(cliente);
+            return true;
+        }
+        return false;
+    }
 
+    public boolean removeCliente(Cliente cliente) {
+        if (clientes.contains(cliente)) {
+            this.clientes.remove(cliente);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Cuenta{" + "numero=" + numero + ", sucursal=" + sucursal + ", saldoActual=" + saldoActual + ", clientes=" + clientes + '}';
+    }
+    
+    
 }
