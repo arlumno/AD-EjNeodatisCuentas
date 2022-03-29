@@ -1,0 +1,2 @@
+[29-03-2022 19:30:50] Iniciado el programa
+[29-03-2022 19:31:02] finalizado el programa
