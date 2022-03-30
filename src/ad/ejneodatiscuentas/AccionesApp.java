@@ -9,13 +9,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
 import org.neodatis.odb.ODBRuntimeException;
+import org.neodatis.odb.Values;
 import org.neodatis.odb.core.query.IQuery;
+import org.neodatis.odb.core.query.criteria.And;
 import org.neodatis.odb.core.query.criteria.ICriterion;
 import org.neodatis.odb.core.query.criteria.Where;
 import org.neodatis.odb.impl.core.query.criteria.CriteriaQuery;
+import org.neodatis.odb.impl.core.query.values.ValuesCriteriaQuery;
 
 /**
  *
@@ -28,445 +30,62 @@ class AccionesApp {
     public AccionesApp() {
 
     }
-//
-//    private int obtenerCodLibro(Libro libro) throws Exception {
-//        int resultado = -1;
-//        try {
-//            ICriterion filtro = Where.equal("cod", libro.getCod());
-//            IQuery query = new CriteriaQuery(Libro.class, filtro);
-//            Libro libBD = (Libro) OdbConnection.getOdb().getObjects(query).getFirst();
-//            resultado = libBD.getCod();
-//            //TODO resultado = objeto.
-//        } catch (ODBRuntimeException ex) {
-//        }
-//
-//        return resultado;
-//    }
-//
-//    private String obtenerDniAutor(Autor autor) throws Exception {
-//        String resultado = null;
-//        try {
-//            ICriterion filtro = Where.equal("dni", autor.getDni());
-//            IQuery query = new CriteriaQuery(Autor.class, filtro);
-//            Autor autorBD = (Autor) OdbConnection.getOdb().getObjects(query).getFirst();
-//            resultado = autorBD.getDni();
-//            //TODO resultado = objeto.
-//        } catch (ODBRuntimeException ex) {
-//
-//            //no hay resultados.
-//        }
-////        } catch (Exception ex) {
-////            peticiones.SalidasGui.mensaje(ex.toString());
-////        }
-//        return resultado;
-//    }
-//
-//    private Libro obtenerLibro(int cod) throws Exception {
-//        Libro libro = null;
-//        try {
-//            ICriterion filtro = Where.equal("cod", cod);
-//            IQuery query = new CriteriaQuery(Libro.class, filtro);
-//            libro = (Libro) OdbConnection.getOdb().getObjects(query).getFirst();
-//        } catch (ODBRuntimeException ex) {
-//            //no hay resultados.
-//
-////        } catch (Exception ex) {
-////            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//        return libro;
-//    }
-//
-//    private Autor obtenerAutor(String dni) throws Exception {
-//        Autor autor = null;
-//        try {
-//            ICriterion filtro = Where.equal("dni", dni);
-//            IQuery query = new CriteriaQuery(Autor.class, filtro);
-//            autor = (Autor) OdbConnection.getOdb().getObjects(query).getFirst();
-//        } catch (ODBRuntimeException ex) {
-//            //no hay resultados.
-////        } catch (Exception ex) {
-////            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//        return autor;
-//    }
-//
-
-    void runStopServer() {
-        StringBuilder anuncio = new StringBuilder();
-        if (OdbServer.isRun()) {
-            anuncio.append("Apagando servidor...\n");
-            if (OdbServer.stop()) {
-                anuncio.append("--- Servidor apagado con éxito ---");
-            } else {
-                anuncio.append("--- Error al apagar el servidor ---");
-            }
-        } else {
-            anuncio.append("Iniciando servidor...\n");
-            if (OdbServer.run()) {
-                anuncio.append("--- Servidor iniciado con éxito ---");
-            } else {
-                anuncio.append("--- Error al iniciar el servidor ---");
-            }
-        }
-        peticiones.SalidasGui.mensaje(anuncio.toString());
-
-    }
-//
-//    void altaAutor() {
-//        try {
-//            Libro lib1 = new Libro(1, "Historias para no dormir", "Drama", 20.95F, dateFormat.parse("13/04/2019"));
-//            Autor a1 = new Autor("53170624Y", "Armando", "un lugar tranquilo 123", 38, Autor.NACIONALIDAD_ESP);
-//            Libro lib6 = new Libro(9, "Historias para seguir sin dormir", "Drama", 23.95F, dateFormat.parse("13/04/2020"));
-//            a1.addLibro(lib1);
-//            a1.addLibro(lib6);
-//
-//            Libro lib2 = new Libro(002, "Mancato", "Western", 12.95F, dateFormat.parse("04/11/2020"));
-//            Autor a2 = new Autor("12345678Z", "Mario Luciano", "papidipupi 33", 58, Autor.NACIONALIDAD_IT);
-//            a2.addLibro(lib2);
-//
-//            Libro lib3 = new Libro(4, "PewPew", "Comedia", 13.45F, dateFormat.parse("09/05/2021"));
-//            Autor a3 = new Autor("87654321Z", "Alberti D'niente", "maquefa 73", 65, Autor.NACIONALIDAD_IT);
-//            a3.addLibro(lib3);
-//
-//            Libro lib4 = new Libro(5, "Cosas", "Costumbrista", 61.15F, dateFormat.parse("22/10/2020"));
-//            Autor a4 = new Autor("11223344J", "Marisa Mars", "congoja  66", 65, Autor.NACIONALIDAD_ESP);
-//            a4.addLibro(lib4);
-//
-//            Libro lib5 = new Libro(6, "Mondie", "Costumbrista", 21.15F, dateFormat.parse("29/10/2019"));
-//            Autor a5 = new Autor("44332211F", "Fransua Piaf", "parisie 33", 25, Autor.NACIONALIDAD_FR);
-//            a5.addLibro(lib5);
-//
-//            if (obtenerDniAutor(a1) == null) {
-//
-//                OdbConnection.getOdb().store(a1);
-//                peticiones.SalidasGui.mensaje("Guardado Autor: \n" + a1.toString() + "\n con libros: " + a1.getLibros().toString());
-//
-//            }
-//
-//            if (obtenerDniAutor(a2) == null) {
-//                OdbConnection.getOdb().store(a2);
-//                peticiones.SalidasGui.mensaje("Guardado Autor: \n" + a2.toString() + "\n con libros: " + a2.getLibros().toString());
-//            }
-//
-//            if (obtenerDniAutor(a3) == null) {
-//                OdbConnection.getOdb().store(a3);
-//                peticiones.SalidasGui.mensaje("Guardado Autor: \n" + a3.toString() + "\n con libros: " + a3.getLibros().toString());
-//            }
-//
-//            if (obtenerDniAutor(a4) == null) {
-//                OdbConnection.getOdb().store(a4);
-//                peticiones.SalidasGui.mensaje("Guardado Autor: \n" + a4.toString() + "\n con libros: " + a4.getLibros().toString());
-//            }
-//            if (obtenerDniAutor(a5) == null) {
-//                OdbConnection.getOdb().store(a5);
-//                peticiones.SalidasGui.mensaje("Guardado Autor: \n" + a5.toString() + "\n con libros: " + a5.getLibros().toString());
-//            }
-//            OdbConnection.getOdb().close();
-//
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//
-//    }
-//
-//    void addLibroToAutor() {
-//        try {
-//            String dniAutor = "53170624Y";
-//            Autor autor = obtenerAutor(dniAutor);
-//            if (autor != null) {
-//                Libro libro = new Libro(003, "The Autonomo", "Terror", 36.95F, dateFormat.parse("25/09/2019"));
-//
-//                int codLibro = obtenerCodLibro(libro);
-//                if (codLibro == -1) {
-//                    autor.addLibro(libro);
-//                } else {
-//                    autor.addLibro(obtenerLibro(codLibro));
-//                }
-//                OdbConnection.getOdb().store(autor);
-//
-//                peticiones.SalidasGui.mensaje("Guardado Libro: \n" + libro.toString());
-//            }
-//
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//
-//    }
-//
-//    void modDirAutor() {
-//        try {
-//            String dniAutor = "53170624Y";
-//            Autor autor = obtenerAutor(dniAutor);
-//            if (autor != null) {
-//                String viejaDireccion = autor.getDireccion();
-//                String nuevaDireccion = "el nuevo sitio " + ((int) (Math.random() * 1000));
-//                autor.setDireccion(nuevaDireccion);
-//
-//                OdbConnection.getOdb().store(autor);
-//                peticiones.SalidasGui.mensaje("Actualizada la dirección de " + autor.getNombre() + "\n  " + viejaDireccion + " -> " + autor.getDireccion() + "\n Autor: \n " + autor.toString());
-//            }
-//
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//
-//    }
-//
-//    void modPrecioLibro() {
-//        String nombreAutor = "Mario Luciano";
-//        String tituloLibro = "Mancato";
-//        float precioAnterior = 0;
-//        float precioNuevo = (float) ((int) (Math.random() * 10000)) / 100;
-//        Autor autor = null;
-//        try {
-//            try {
-//                ICriterion filtro = Where.equal("nombre", nombreAutor);
-//                IQuery query = new CriteriaQuery(Autor.class, filtro);
-//                autor = (Autor) OdbConnection.getOdb().getObjects(query).getFirst();
-//            } catch (ODBRuntimeException ex) {
-//                peticiones.SalidasGui.mensaje("El autor indicado no existe.");
-//            }
-//            if (autor != null) {
-//                ArrayList<Libro> libros = autor.getLibros();
-//                boolean encontrado = false;
-//                for (Libro libro : libros) {
-//                    if (libro.getTitulo().equals(tituloLibro)) {
-//                        precioAnterior = libro.getPrecio();
-//                        libro.setPrecio(precioNuevo);
-//                        encontrado = true;
-//                    }
-//                }
-//                if (encontrado) {
-//
-//                    OdbConnection.getOdb().store(autor);
-//                    peticiones.SalidasGui.mensaje("Actualizado el precio del libro: " + tituloLibro + "\nde " + precioAnterior + " a " + precioNuevo);
-//
-//                } else {
-//                    peticiones.SalidasGui.mensaje("No se ha encontrado el libro en el autor: " + autor.getNombre());
-//                }
-//
-//            }
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//    }
-//
-//    void delLibro() {
-//        String nombreAutor = "Armando";
-//        int codLibro = 003;
-//        Autor autor = null;
-//        try {
-//            try {
-//                ICriterion filtro = Where.equal("nombre", nombreAutor);
-//                IQuery query = new CriteriaQuery(Autor.class, filtro);
-//                autor = (Autor) OdbConnection.getOdb().getObjects(query).getFirst();
-//            } catch (ODBRuntimeException ex) {
-//                peticiones.SalidasGui.mensaje("El autor indicado no existe.");
-//            }
-//            if (autor != null) {
-//                ArrayList<Libro> libros = autor.getLibros();
-//                Libro libroEliminar = null;
-//                for (Libro libro : libros) {
-//                    if (libro.getCod() == codLibro) {
-//                        libroEliminar = libro;
-//                    }
-//                }
-//                if (libroEliminar != null) {
-//                    try {
-//                        OdbConnection.getOdb().delete(libroEliminar);
-//                        peticiones.SalidasGui.mensaje("Se ha eliminado el libro: " + libroEliminar.getTitulo() + "\ndel autor:  " + autor.getNombre());
-//                    } catch (Exception ex) {
-//                        peticiones.SalidasGui.mensaje(ex.toString());
-//                    }
-//
-//                } else {
-//                    peticiones.SalidasGui.mensaje("No se ha encontrado el libro en el autor: " + autor.getNombre());
-//                }
-//
-//            }
-//
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//    }
-//
-//    void listarAutoresItalianos() {
-//        StringBuilder resultado = new StringBuilder();
-//        try {
-//            ICriterion filtro = Where.equal("nacionalidad", Autor.NACIONALIDAD_IT);
-//            IQuery query = new CriteriaQuery(Autor.class, filtro);
-//            Object[] autoresObj = OdbConnection.getOdb().getObjects(query).toArray();
-//            resultado.append("Autores (" + autoresObj.length + "):\n");
-//            for (Object autorObj : autoresObj) {
-//                resultado.append(" >> " + ((Autor) autorObj).toString() + "\n");
-//            }
-//            peticiones.SalidasGui.mensaje(resultado.toString());
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//    }
-//
-//    void listarLibrosFiltroFechas() {
-//        try {
-//            String dni = "53170624Y";
-//            Date fechaInicio = dateFormat.parse("01/09/2019");
-//            Date fechafin = dateFormat.parse("21/12/2022");
-//            Date fechaLibro;
-//            Autor autor = obtenerAutor(dni);
-//            if (autor != null) {
-//                StringBuilder resultado = new StringBuilder();
-//                resultado.append("Libros para el Autor: " + autor.getNombre() + " entre " + fechaInicio.toString() + " y " + fechafin.toString() + "\n ");
-//                for (Libro libro : autor.getLibros()) {
-//                    fechaLibro = libro.getFechaPublicacion();
-//                    if (fechaLibro.after(fechaInicio) && fechaLibro.before(fechafin)) {
-//                        resultado.append("   >>> " + libro.toString() + "\n");
-//                    }
-//                }
-//                peticiones.SalidasGui.mensaje(resultado.toString());
-//            }
-//            OdbConnection.getOdb().close();
-//        } catch (ParseException ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        } catch (Exception e) {
-//            peticiones.SalidasGui.mensaje(e.toString());
-//        }
-//    }
-//
-//    void listarAutoresEspanolesMayores60() {
-//        StringBuilder resultado = new StringBuilder();
-//        Autor autor;
-//        StringBuilder libros = new StringBuilder();
-//        try {
-//            ICriterion filtro = new And()
-//                    .add(Where.equal("nacionalidad", Autor.NACIONALIDAD_ESP))
-//                    .add(Where.gt("edad", 60));
-//
-//            IQuery query = new CriteriaQuery(Autor.class, filtro);
-//            Object[] autoresObj = OdbConnection.getOdb().getObjects(query).toArray();
-//            resultado.append("Autores (" + autoresObj.length + "):\n");
-//            resultado.append("Nombre                Edad                Libros\n");
-//            resultado.append("------                ----                ------\n");
-//            for (Object autorObj : autoresObj) {
-//                autor = (Autor) autorObj;
-//                for (Libro libro : autor.getLibros()) {
-//                    libros.append(libro.getTitulo() + ", ");
-//                }
-//                resultado.append(autor.getNombre() + "                " + autor.getEdad() + "                " + libros.toString() + "\n");
-//            }
-//            peticiones.SalidasGui.mensaje(resultado.toString());
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//
-//    }
-//
-//    void listarNumeroAutoresPorNacionalidad() {
-//        try {
-//            StringBuilder resultado = new StringBuilder();
-//            Values groupby = OdbConnection.getOdb().getValues(new ValuesCriteriaQuery(Autor.class).field("nacionalidad").count("dni").groupBy("nacionalidad"));
-//
-//            while (groupby.hasNext()) {
-//                ObjectValues objetos = (ObjectValues) groupby.next();
-//                resultado.append(objetos.getByAlias("nacionalidad") + ": " + objetos.getByIndex(1) + "\n");
-//            }
-//            //para comparar hago un listado:
-//
-//            IQuery query = new CriteriaQuery(Autor.class).orderByAsc("nacionalidad");
-//            Object[] autoresObj = OdbConnection.getOdb().getObjects(query).toArray();
-//
-//            resultado.append("Autores (" + autoresObj.length + "):\n");
-//            for (Object autorObj : autoresObj) {
-//                resultado.append(" >> " + ((Autor) autorObj).toString() + "\n");
-//            }
-//            peticiones.SalidasGui.mensaje(resultado.toString());
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//    }
-//
-//    void listarLibrosAutor() {
-//        try {
-//            String dni = "53170624Y";
-//            Autor autor = obtenerAutor(dni);
-//            if (autor != null) {
-//                StringBuilder resultado = new StringBuilder();
-//                resultado.append("Libros para el Autor: " + autor.getNombre() + ", Total:  " + autor.getLibros().size() + "\n");
-//                for (Libro libro : autor.getLibros()) {
-//                    resultado.append("   >>> " + libro.toString() + "\n");
-//                }
-//                peticiones.SalidasGui.mensaje(resultado.toString());
-//            }
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//
-//    }
-//
-//    void listarDatosLibro() {
-//        try {
-//            int cod = 2;
-//            Libro libro = obtenerLibro(cod);
-//            if (libro != null) {
-//                StringBuilder resultado = new StringBuilder();
-//                resultado.append("Datos libro:\n" + libro.toString());
-//                peticiones.SalidasGui.mensaje(resultado.toString());
-//            }
-//            OdbConnection.getOdb().close();            
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//    }
-//
-//    void listarAutoresYLibros() {
-//        try {
-//            StringBuilder resultado = new StringBuilder();
-//
-//            Object[] autoresObj = OdbConnection.getOdb().getObjects(Autor.class).toArray();
-//            resultado.append("Autores (" + autoresObj.length + "):\n");
-//            for (Object autorObj : autoresObj) {
-//                resultado.append(" >> " + ((Autor) autorObj).toString() + "\n");
-//            }
-//
-//            Object[] librosObj = OdbConnection.getOdb().getObjects(Libro.class).toArray();
-//            resultado.append(" -------------- ");
-//            resultado.append("\nLibros (" + librosObj.length + "):\n");
-//            for (Object libroObj : librosObj) {
-//                resultado.append(" >> " + ((Libro) libroObj).toString() + "\n");
-//            }
-//
-//            peticiones.SalidasGui.mensaje(resultado.toString());
-//            OdbConnection.getOdb().close();
-//        } catch (Exception ex) {
-//            peticiones.SalidasGui.mensaje(ex.toString());
-//        }
-//
-//    }
 
     void altaCuentaCorriente() {
         HashSet<Cliente> clientes = new HashSet<Cliente>();
+        HashSet<Cliente> clientes2 = new HashSet<Cliente>();
+        HashSet<Cliente> clientes3 = new HashSet<Cliente>();
+        HashSet<Cliente> clientes4 = new HashSet<Cliente>();
         Cliente c1 = new Cliente("53170624Y", "Armando", "cualquier lugar 123");
+        Cliente c2 = new Cliente("12345678Z", "Carlos", "ningún lugar 123");
         clientes.add(c1);
-        CuentaCorriente cc01 = new CuentaCorriente(10001, "florida", 100, clientes);
+        clientes.add(c2);
+        CuentaCorriente cc01 = new CuentaCorriente(10001, "florida", 300000, clientes);
         c1.addCuenta(cc01);
+        c2.addCuenta(cc01);
 
-        if (obtenerCuenta(cc01.getNumero()) == null) {
-            try {
+        Cliente c3 = new Cliente("88888888P", "Ana", "el lugar 123");
+        clientes2.add(c2);
+        clientes2.add(c3);
+        CuentaCorriente cc02 = new CuentaCorriente(10002, "salamanca", 350000, clientes2);
+
+        clientes3.add(c1);
+        CuentaCorriente cc03 = new CuentaCorriente(10003, "salamanca", -5000, clientes3);
+
+        clientes4.add(c3);
+        CuentaCorriente cc04 = new CuentaCorriente(10004, "bilbao", -30, clientes4);
+
+        try {
+            if (obtenerCuenta(cc01.getNumero()) == null) {
                 OdbConnection.getOdb().store(cc01);
                 peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cc01.toString());
-                OdbConnection.getOdb().close();
-            } catch (Exception ex) {
-                peticiones.SalidasGui.mensaje(ex.toString());
+            } else {
+                peticiones.SalidasGui.mensaje("No se puede crear la cuenta, el nº " + cc01.getNumero() + " ya existe.");
             }
-        } else {
-            peticiones.SalidasGui.mensaje("No se puede crear la cuenta, el nº " + cc01.getNumero() + " ya existe.");
+
+            if (obtenerCuenta(cc02.getNumero()) == null) {
+                OdbConnection.getOdb().store(cc02);
+                peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cc02.toString());
+            } else {
+                peticiones.SalidasGui.mensaje("No se puede crear la cuenta, el nº " + cc02.getNumero() + " ya existe.");
+            }
+
+            if (obtenerCuenta(cc03.getNumero()) == null) {
+                OdbConnection.getOdb().store(cc03);
+                peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cc03.toString());
+            } else {
+                peticiones.SalidasGui.mensaje("No se puede crear la cuenta, el nº " + cc03.getNumero() + " ya existe.");
+            }
+
+            if (obtenerCuenta(cc04.getNumero()) == null) {
+                OdbConnection.getOdb().store(cc04);
+                peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cc04.toString());
+            } else {
+                peticiones.SalidasGui.mensaje("No se puede crear la cuenta, el nº " + cc04.getNumero() + " ya existe.");
+            }
+            OdbConnection.getOdb().close();
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
         }
     }
 
@@ -474,7 +93,7 @@ class AccionesApp {
         HashSet<Cliente> clientes = new HashSet<Cliente>();
         Cliente c1 = new Cliente("36037769N", "Castro", "otro lugar distinto 123");
         clientes.add(c1);
-        CuentaPlazo cp01 = new CuentaPlazo(4, "29/03/2023", 20000, 1002, "Sanjurjo Badía", 0, clientes);
+        CuentaPlazo cp01 = new CuentaPlazo(4, "29/03/2023", 20000, 20001, "Sanjurjo Badía", 0, clientes);
         c1.addCuenta(cp01);
 
         if (obtenerCuenta(cp01.getNumero()) == null) {
@@ -493,47 +112,199 @@ class AccionesApp {
     void altaMovimiento() {
         try {
             CuentaCorriente cuentacorriente = obtenerCuentaCorriente(10001);
-            Movimiento mov = new Movimiento(dateFormat.parse("29/03/2022"), cuentacorriente, Movimiento.OP_INGRESO, 200, 0);
-            cuentacorriente.addMovimientos(mov);
-            try {
+            Movimiento mov = null;
+            Movimiento mov2 = null;
+            Movimiento mov3 = null;
+            if (cuentacorriente != null) {
+                try {
+                    mov = new Movimiento(dateFormat.parse("29/03/2021"), cuentacorriente, Movimiento.OP_INGRESO, 500);
+                    mov2 = new Movimiento(dateFormat.parse("20/04/2021"), cuentacorriente, Movimiento.OP_RETIRADA, 100);
+                    mov3 = new Movimiento(dateFormat.parse("29/01/2022"), cuentacorriente, Movimiento.OP_INGRESO, 10000);
+                } catch (ParseException ex) {
+                    peticiones.SalidasGui.mensaje(ex.toString());
+                }
+                cuentacorriente.addMovimientos(mov);
+                cuentacorriente.addMovimientos(mov2);
+                cuentacorriente.addMovimientos(mov3);
+
                 OdbConnection.getOdb().store(cuentacorriente);
                 peticiones.SalidasGui.mensaje("Guardada Cuenta: \n" + cuentacorriente.toString());
                 OdbConnection.getOdb().close();
-            } catch (Exception ex) {
-                peticiones.SalidasGui.mensaje(ex.toString());
+            } else {
+                peticiones.SalidasGui.mensaje("La cuenta no existe.");
             }
-        } catch (ParseException ex) {
+        } catch (Exception ex) {
             peticiones.SalidasGui.mensaje(ex.toString());
         }
     }
 
     void modInteresCuentaPlazo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+//            String dniCliente = "36037769N";
+            int nCuentaPlazo = 20001;
+            int nuevoInteres = (int) (Math.random() * 25);
+            CuentaPlazo cuentaPlazo = obtenerCuentaPlazo(nCuentaPlazo);
+            if (cuentaPlazo != null) {
+                int antiguoInteres = cuentaPlazo.getIntereses();
+                cuentaPlazo.setIntereses(nuevoInteres);
+                OdbConnection.getOdb().store(cuentaPlazo);
+                OdbConnection.getOdb().close();
+                peticiones.SalidasGui.mensaje("Se ha cambiado el interes de la cuenta nº " + cuentaPlazo.getNumero()
+                        + "\n Interes de " + antiguoInteres + " a  " + cuentaPlazo.getIntereses());
+            } else {
+                peticiones.SalidasGui.mensaje("La cuenta a plazo no existe.");
+            }
+
+        } catch (ODBRuntimeException ex) {
+            //no hay resultados.        
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
+
     }
 
     void delCuentaPlazo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            int nCuentaPlazo = 20001;
+            CuentaPlazo cuentaPlazo = obtenerCuentaPlazo(nCuentaPlazo);
+            if (cuentaPlazo != null) {
+                OdbConnection.getOdb().delete(cuentaPlazo);
+                OdbConnection.getOdb().close();
+                peticiones.SalidasGui.mensaje("Se ha elimnado la cuenta nº " + cuentaPlazo.getNumero());
+            } else {
+                peticiones.SalidasGui.mensaje("La cuenta a plazo no existe.");
+            }
+
+        } catch (ODBRuntimeException ex) {
+            //no hay resultados.        
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
     }
 
     void listarClientesC() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            ICriterion filtro = Where.like("nombre", "C%");
+            IQuery query = new CriteriaQuery(Cliente.class, filtro);
+            StringBuilder resultado = new StringBuilder();
+
+            Object[] clientes = OdbConnection.getOdb().getObjects(query).toArray();
+            OdbConnection.getOdb().close();
+            resultado.append("Clientes C:  (" + clientes.length + "):\n");
+            for (Object clienteObj : clientes) {
+                resultado.append(" >> " + ((Cliente) clienteObj).toString() + "\n");
+            }
+            peticiones.SalidasGui.mensaje(resultado.toString());
+        } catch (ODBRuntimeException ex) {
+            //no hay resultados.        
+            peticiones.SalidasGui.mensaje("No hay resultados");
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
     }
 
-    void listarClientesSaldoMayor(float f
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    void listarClientesSaldoMayor() {
+        try {
+            float saldo = 200000F;
+            ICriterion filtro = Where.gt("saldoActual", saldo);
+            IQuery query = new CriteriaQuery(CuentaCorriente.class, filtro);
+
+            StringBuilder resultado = new StringBuilder();
+
+            Object[] cuentasCorrientes = OdbConnection.getOdb().getObjects(query).toArray();
+            resultado.append("Cuentas con saldo mayor que " + saldo + ":  (" + cuentasCorrientes.length + "):\n");
+            for (Object cuentasCorrienteObj : cuentasCorrientes) {
+                resultado.append(" >> " + ((CuentaCorriente) cuentasCorrienteObj).toString() + "\n");
+            }
+            peticiones.SalidasGui.mensaje(resultado.toString());
+        } catch (ODBRuntimeException ex) {
+            peticiones.SalidasGui.mensaje("No hay resultados");
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
     }
 
     void contarClientesNumerosRojos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            ICriterion filtro = Where.lt("saldoActual", 0);
+            IQuery query = new CriteriaQuery(CuentaCorriente.class, filtro);
+            StringBuilder resultado = new StringBuilder();
+            Set<Cliente> listadoClientes = new HashSet<Cliente>();
+            Object[] cuentasCorrientes = OdbConnection.getOdb().getObjects(query).toArray();
+            OdbConnection.getOdb().close();
+
+            for (Object cuentasCorrienteObj : cuentasCorrientes) {
+                listadoClientes.addAll(((CuentaCorriente) cuentasCorrienteObj).getClientes());
+            }
+
+            resultado.append("Clientes en nº rojos:  (" + listadoClientes.size() + "):\n");
+            for (Cliente cliente : listadoClientes) {
+                resultado.append(">>> " + cliente.toString() + "):\n");
+
+            }
+            peticiones.SalidasGui.mensaje(resultado.toString());
+        } catch (ODBRuntimeException ex) {
+            peticiones.SalidasGui.mensaje("No hay resultados");
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
     }
 
     void verAVGSaldoCuentPlazo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            StringBuilder resultado = new StringBuilder();
+
+            //uso mejor cuenta corriente que tiene mas variedad de saldos, cuenta a plazo tiene saldo 0 y depositos.
+            Values valuesCuentas = OdbConnection.getOdb().getValues(new ValuesCriteriaQuery(CuentaCorriente.class).sum("saldoActual"));
+            Values valuesClientes = OdbConnection.getOdb().getValues(new ValuesCriteriaQuery(Cliente.class).count("dni"));
+
+            float saldoTotal = Float.parseFloat(valuesCuentas.getFirst().getByAlias("saldoActual").toString());
+            int nClientes = Integer.parseInt(valuesClientes.getFirst().getByAlias("dni").toString());
+            float media = saldoTotal / (float) nClientes;
+
+            resultado.append("Saldos Totales: " + saldoTotal);
+            resultado.append("\n Numero de clientes: " + nClientes);
+            resultado.append("\n\n  -- Saldo Medio: " + media + " -- ");
+
+            peticiones.SalidasGui.mensaje(resultado.toString());
+            OdbConnection.getOdb().close();
+
+        } catch (ODBRuntimeException ex) {
+            peticiones.SalidasGui.mensaje("No hay resultados");
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
     }
 
     void listarMovimientosEntreFechas() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            CuentaCorriente cuentacorriente = obtenerCuentaCorriente(10001);
+            OdbConnection.getOdb().close();
+            Date fechaInicio = dateFormat.parse("01/01/2021");
+            Date fechaFin = dateFormat.parse("01/12/2021");
+            Set<Movimiento> listaMovimientos = new HashSet<Movimiento>();
+            StringBuilder resultado = new StringBuilder();
+            Date f;
+            resultado.append("Movimientos entre " + fechaInicio + " y " + fechaFin);
+            if (cuentacorriente != null) {
+                for (Movimiento movimiento : cuentacorriente.getMovimientos()) {
+                    f = movimiento.getFecha();
+                    if ((f.before(fechaFin) && f.after(fechaInicio)) || f.equals(fechaFin) || f.equals(fechaInicio)) {
+//                        listaMovimientos.add(movimiento);
+                        resultado.append("\n" + movimiento.toString());
+                    }
+                }
+
+                peticiones.SalidasGui.mensaje(resultado.toString());
+            } else {
+                peticiones.SalidasGui.mensaje("La cuenta no existe.");
+            }
+        } catch (ParseException ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        } catch (Exception ex) {
+            peticiones.SalidasGui.mensaje(ex.toString());
+        }
+
     }
 
     private Cuenta obtenerCuenta(int numero) {
@@ -553,10 +324,19 @@ class AccionesApp {
     private CuentaCorriente obtenerCuentaCorriente(int numero) {
         CuentaCorriente cuentaCorriente = null;
         Cuenta cuenta = obtenerCuenta(numero);
-        if(cuenta != null && cuenta instanceof CuentaCorriente){
+        if (cuenta != null && cuenta instanceof CuentaCorriente) {
             cuentaCorriente = (CuentaCorriente) cuenta;
         }
         return cuentaCorriente;
+    }
+
+    private CuentaPlazo obtenerCuentaPlazo(int numero) {
+        CuentaPlazo cuentaPlazo = null;
+        Cuenta cuenta = obtenerCuenta(numero);
+        if (cuenta != null && cuenta instanceof CuentaPlazo) {
+            cuentaPlazo = (CuentaPlazo) cuenta;
+        }
+        return cuentaPlazo;
     }
 
 }

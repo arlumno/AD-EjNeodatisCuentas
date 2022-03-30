@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class CuentaCorriente extends Cuenta {
 
-    private List movimientos = new ArrayList<Movimiento>();
+    private List<Movimiento> movimientos = new ArrayList<Movimiento>();
 
     public CuentaCorriente() {
 
@@ -33,7 +33,7 @@ public class CuentaCorriente extends Cuenta {
         this.movimientos = movimientos;
     }
 
-    public List getMovimientos() {
+    public List<Movimiento> getMovimientos() {
         return movimientos;
     }
 

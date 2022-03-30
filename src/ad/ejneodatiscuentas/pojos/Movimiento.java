@@ -26,7 +26,10 @@ public class Movimiento {
     }
 
     public Movimiento(Date fecha, Cuenta cuenta, char operacion, float importe) {
-        this(fecha, cuenta, operacion, importe, 0);        
+        this.fecha = fecha;
+        this.cuenta = cuenta;
+        this.operacion = operacion;
+        this.importe = importe;
     }
 
     public Movimiento(Date fecha, Cuenta cuenta, char operacion, float importe, float saldoResultante) {
@@ -77,4 +80,9 @@ public class Movimiento {
         this.saldoResultante = saldoResultante;
     }
 
+    @Override
+    public String toString() {
+        return "Movimiento{" + "fecha=" + fecha + ", cuenta=" + cuenta + ", operacion=" + operacion + ", importe=" + importe + ", saldoResultante=" + saldoResultante + '}';
+    }
+    
 }

@@ -73,7 +73,7 @@ public class App {
             app.listarClientesC();
         });
         menu.addOpcion("Listado Clientes saldo > 200k", () -> {
-            app.listarClientesSaldoMayor(200F);
+            app.listarClientesSaldoMayor();
         });        
         menu.addOpcion("Cantidad clientes numeros rojos", () -> {
             app.contarClientesNumerosRojos();
