@@ -28,6 +28,27 @@ class AccionesApp {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public AccionesApp() {
+        runStopServer();
+    }
+
+    void runStopServer() {
+        StringBuilder anuncio = new StringBuilder();
+        if (OdbServer.isRun()) {
+            anuncio.append("Apagando servidor...\n");
+            if (OdbServer.stop()) {
+                anuncio.append("--- Servidor apagado con éxito ---");
+            } else {
+                anuncio.append("--- Error al apagar el servidor ---");
+            }
+        } else {
+            anuncio.append("Iniciando servidor...\n");
+            if (OdbServer.run()) {
+                anuncio.append("--- Servidor iniciado con éxito ---");
+            } else {
+                anuncio.append("--- Error al iniciar el servidor ---");
+            }
+        }
+        peticiones.SalidasGui.mensaje(anuncio.toString());
 
     }
 
@@ -285,7 +306,7 @@ class AccionesApp {
             Set<Movimiento> listaMovimientos = new HashSet<Movimiento>();
             StringBuilder resultado = new StringBuilder();
             Date f;
-            resultado.append("Movimientos entre " + fechaInicio + " y " + fechaFin);
+            resultado.append("Movimientos entre " + dateFormat.format(fechaInicio)+ " y " + dateFormat.format(fechaFin));
             if (cuentacorriente != null) {
                 for (Movimiento movimiento : cuentacorriente.getMovimientos()) {
                     f = movimiento.getFecha();

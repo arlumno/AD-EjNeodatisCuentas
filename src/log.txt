@@ -68,3 +68,13 @@
 [30-03-2022 18:13:05] finalizado el programa
 [30-03-2022 18:13:06] Iniciado el programa
 [30-03-2022 18:14:51] finalizado el programa
+[05-04-2022 18:40:14] Iniciado el programa
+[05-04-2022 18:45:00] finalizado el programa
+[05-04-2022 18:45:52] Iniciado el programa
+[05-04-2022 18:47:27] finalizado el programa
+[05-04-2022 18:47:31] Iniciado el programa
+[05-04-2022 18:48:14] finalizado el programa
+[05-04-2022 18:48:17] Iniciado el programa
+[05-04-2022 18:48:31] finalizado el programa
+[05-04-2022 18:51:22] Iniciado el programa
+[05-04-2022 18:51:38] finalizado el programa
